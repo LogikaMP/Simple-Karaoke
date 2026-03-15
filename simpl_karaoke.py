@@ -212,9 +212,9 @@ class App(Ctk):
             # Зміни текст кнопки на "Start"
             self.btn_record.configure(text = "Start")
             # Зміни текст label на "Processing and saving..."
-            self.lbl_info.configure(text="")
+            self.lbl_info.configure(text="Processing and saving...")
             # Виклич метод save_file()
-            self
+            self.save_file()
 
 
 
@@ -253,7 +253,7 @@ class App(Ctk):
         # sample rate
         # звук переведений у int16
 
-        wavfile.
+        wavfile.write(record_path,self.fs,mixed)
 
 
         # ---------------------------------------------------
@@ -261,7 +261,7 @@ class App(Ctk):
         # ---------------------------------------------------
 
         # Відтвори результат sd.play()
-        sd.
+        sd.play(mixed,self.fs)
 
         # Встанови playing = True
         self.playing = True
@@ -293,10 +293,10 @@ class App(Ctk):
         # Створи Canvas
         # розмір 890x440
         # фон "#310A31"
-        self.canva = 
+        self.canva = CTkCanvas(width = 890,hight = 440,dg= "#310A31") 
 
         # Розмісти Canvas у координатах (0, 300)
-        self.
+        self.pack(0,300)
 
 
         # Створи список стовпчиків
@@ -311,17 +311,17 @@ class App(Ctk):
 
 
         # Створи 15 стовпчиків у циклі
-        for 
+        for i in range(15):
 
             # Випадкова висота 20–400
-            h = 
+            h = randint(20,400)
 
             # Отримай випадковий колір
-            color = 
+            color = self.random_color()
 
             # Розрахуй координату y1
             # 440 - висота стовпчика
-            y1 
+            y1 = 440 - h
 
             # Створи прямокутник
             # аргументи:
@@ -329,18 +329,18 @@ class App(Ctk):
             # x1 + w
             # 440
             # fill=color
-            st = 
+            st = self.canva.creat_regtangle(x1,y1,x1 +w,440,fill = color)
 
             # Додай стовпчик у список
-            self.
+            self.stolp.append(st)
 
             # Зміни x1
             # додай ширину стовпчика + 5
-            x1 
+            x1 += w+5
 
 
         # Запусти анімацію
-        self.
+        self.anime()
 
 
 
@@ -351,40 +351,39 @@ class App(Ctk):
     def anime(self):
 
         # Якщо іде запис або відтворення
-        if 
+        if self.recording or self.playing:
 
             # Початкові значення
-            x1 
-            w 
+            x1 = 10
+            w = 60
 
             # Перебери всі стовпчики
-            for 
-
+            for st in self.stolp:
                 # Нова висота
-                h 
+                h = randint(20,400)
 
                 # Новий колір
-                color 
+                color = self.random.color()
 
                 # Нова координата y
-                y1 
+                y1 = 440-h
 
 
                 # Зміни координати стовпчика
                 # метод canvas.coords()
-                self
+                self.canva.coords(st,x1,y1,x1+w,440)
 
 
                 # Зміни колір
                 # метод canvas.itemconfig()
-                self.
+                self.canva.itemconfig(st,fiil = color)
 
                 # Зміни x1
-                x1 
+                x1 += w +5
 
 
         # Повтор виклику через 150 мс
-        self.
+        self.after(150, self.anime)
 
 
 
@@ -395,19 +394,19 @@ class App(Ctk):
     def stop_all(self, e):
 
         # Зупини звук
-        sd
+        sd.stop
 
         # Встанови playing = False
-        self.
+        self.playing = False
 
         # Встанови recording = False
-        self.
+        self.recording = False
 
         # Зміни текст кнопки
-        self.
+        self.btn_record.configure(text = "start")
 
         # Зміни текст label
-        self.
+        self.lbl_info.configure(text = "Start record or playing")
 
 
 
