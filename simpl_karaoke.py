@@ -4,19 +4,19 @@
 
 # Імпорт елементів customtkinter для створення GUI
 # Імпортуй: CTk (вікно), CTkButton (кнопка), CTkLabel (текст), CTkCanvas (канва)
-from 
+from customtkinter import CTk, CTkButton, CTkLabel,CTkCanvas
 
 # Бібліотека для запису та відтворення звуку
-import 
+import sounddevice as sd
 
 # Імпорт функцій для читання та запису wav файлів
-from 
+from scipy.io import wavfile
 
 # Бібліотека для роботи з числовими масивами (аудіо)
 import numpy as np
 
 # Імпорт функції randint для генерації випадкових чисел
-from r
+from random import randint
 
 
 # ---------------------------------------------------
@@ -35,34 +35,35 @@ record_path = "DREVO-record.wav"
 # ---------------------------------------------------
 
 # Створи клас App який успадковує CTk
-class App():
+class App(Ctk):
 
     # ---------------------------------------------------
     # КОНСТРУКТОР КЛАСУ
     # ---------------------------------------------------
 
-    def 
+    def __init__(self):
+        super().__init__()
 
         # Виклич конструктор батьківського класу CTk
         # встанови колір фону "#310A31"
-        s
+        
 
         # Встанови розмір вікна 600x500
-        self.
+        self.geometry("600x600")
 
         # Встанови назву вікна "Simple Karaoke"
-        self.
+        self.title("Simple Karaoke")
 
         # Створи властивість recording
         # вона показує чи зараз іде запис
-        self.
+        self.recording=False
 
         # Створи властивість playing
         # вона показує чи зараз відтворюється звук
-        self.
+        self.playing = False
 
         # Виклич метод створення анімації звуку
-        self.
+        self.anime()
 
 
         # ---------------------------------------------------
@@ -73,10 +74,10 @@ class App():
         # текст "Simple Karaoke"
         # колір "#BF9BC6"
         # шрифт Arial розмір 40
-        lbl = 
+        lbl = CTkLabel(self,text="Simple Karaoke",color="#BF9BC6",font = ("Arial",40))
 
         # Розмісти label у вікні (pack)
-        lbl.
+        lbl.pack()
 
 
         # ---------------------------------------------------
@@ -90,17 +91,18 @@ class App():
         # радіус кутів 50
         # кольори "#C52EA7" "#BC8CB7"
         # команда — виклик методу do_record
-        self.btn_record 
+        self.btn_record = CTkButton(self,text = "Start",width = 200,hight= 100,radius=50,fg_color = "#C52EA7",text_color="#BC8CB7",
+                                        command=self.do_record )
 
 
         # Додай обробку правої кнопки миші
         # подія "<Button-3>"
         # виклик методу stop_all
-        self.btn_record
+        self.btn_record.bind("<Button-3>")
 
 
         # Відобрази кнопку у вікні
-        self.btn_record
+        self.btn_record.pack()
 
 
         # ---------------------------------------------------
@@ -111,7 +113,7 @@ class App():
         # текст "Start record + minus"
         # колір "#DABBD5"
         # розмір 16
-        self.lbl_info 
+        self.lbl_info = CTkLabel() 
 
         # Розмісти label у вікні
         self.lbl_info
