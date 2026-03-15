@@ -113,10 +113,10 @@ class App(Ctk):
         # текст "Start record + minus"
         # колір "#DABBD5"
         # розмір 16
-        self.lbl_info = CTkLabel() 
+        self.lbl_info = CTkLabel(text ="Start record + minus",color = "DABBD5",size = 16) 
 
         # Розмісти label у вікні
-        self.lbl_info
+        self.lbl_info.pack()
 
 
         # ---------------------------------------------------
@@ -127,10 +127,10 @@ class App(Ctk):
         # текст "Left click stop all"
         # колір "#DABBD5"
         # розмір 16
-        lbl2 
+        lbl2 = CTkLabel(text = "Left click stop all",color = "DABBD5",size = 16)
 
         # Відобрази label
-        lbl2
+        lbl2.pack()
 
 
 
@@ -142,24 +142,24 @@ class App(Ctk):
 
         # Якщо запис НЕ йде
         # перевір властивість recording
-        if 
+        if not self.recording:
 
             # Зупини всі звуки
-            s
+            sd.stop()
 
             # Зміни властивість playing на False
-            self.
+            self.playing = False
 
             # Увімкни запис
             # зміни recording на True
-            self.
+            self.recording = True
 
             # Зміни текст кнопки на "Stop"
-            self.
+            self.btn_record.configure(text = "Stop")
 
             # Зміни текст інформаційного label
             # "Recording... Press Stop when done"
-            self.
+            self.lbl_info.configure(text = "Recording... Press Stop when done")
 
 
             # ---------------------------------------------------
@@ -169,7 +169,7 @@ class App(Ctk):
             # Використай wavfile.read()
             # збережи sample rate у self.fs
             # збережи аудіо масив у self.minus
-            self.
+            self.fs,self.minus = wavfile.read(minus_path)
 
 
             # ---------------------------------------------------
@@ -179,7 +179,7 @@ class App(Ctk):
             # self.minus — масив амплітуд
             # помнож на 0.4 щоб зменшити гучність
             # використай astype(self.minus.dtype)
-            minus_play 
+            minus_play = (self.minus * 0.4).astype(self.minus.dtype)
 
 
             # ---------------------------------------------------
@@ -193,7 +193,8 @@ class App(Ctk):
             # channels — 1 (моно)
 
             # результат запису збережи у self.recording_file
-            self.recording_file = 
+            self.recording_file = sd.player(data = minus_play,samplaret = self.fs,
+                                            channels = 1)
 
 
         else:
@@ -203,17 +204,15 @@ class App(Ctk):
             # ------------------------------------
 
             # Зупини запис sd.stop()
-            sd.
+            sd.stop()
 
             # Зміни recording на False
-            self.
+            self.recording = False
 
             # Зміни текст кнопки на "Start"
-            self.
-
+            self.btn_record.configure(text = "Start")
             # Зміни текст label на "Processing and saving..."
-            self
-
+            self.lbl_info.configure(text="")
             # Виклич метод save_file()
             self
 
